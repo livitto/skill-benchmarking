@@ -13,7 +13,7 @@ main { padding:16px; display:grid; grid-template-columns:1fr 1fr; gap:16px; }
 .skip-link { position:absolute; left:-9999px; top:auto; width:1px; height:1px; overflow:hidden; }
 .skip-link:focus { position:static; width:auto; height:auto; padding:8px 12px; background:#fff; color:#000; border-radius:8px; }
 
-.skill-list { border:1px dashed #263041; border-radius:10px; padding:12px; flex:1; }
+.skill-list { border:1px dashed #263041; border-radius:10px; padding:12px; flex:1; max-height:none; overflow:visible; }
 #skills { display:grid; grid-template-columns: repeat(auto-fill,minmax(180px,1fr)); gap:8px; }
 #skills input[type="checkbox"] { position:absolute; opacity:0; width:1px; height:1px; pointer-events:none; }
 #skills label { display:flex; align-items:center; gap:8px; padding:10px 12px; border-radius:999px; border:1px solid #263041; background:#0b1220; font-weight:600; cursor:pointer; user-select:none; }
