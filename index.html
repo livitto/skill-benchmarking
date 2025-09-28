@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Skill Coverage (Bayesian-style weighting)</title>
+  <title>Skill Benchmarking : Design Graduate</title>
   <link rel="stylesheet" href="./style.css?v=20250928a" />
 </head>
 <body>
@@ -11,7 +11,7 @@
   <div class="container">
   <header role="banner">
     <div class="brand">
-      <h1>Skill Coverage Prototype</h1>
+      <h1>Skill Benchmarking : Design Graduate</h1>
       <span class="pill">Bayesian-style weighting</span>
     </div>
     <div class="controls">
@@ -39,15 +39,19 @@
           <p id="skills-hint" class="muted">Tick all that apply. Results update when you compute.</p>
           <div id="skills"></div>
         </fieldset>
-        <button id="compute" class="primary" type="button">Compute Coverage</button>
+        <button id="compute" class="primary" type="button">Benchmark Your Skills</button>
       </form>
     </section>
 
     <section class="card" aria-labelledby="results-title">
       <h2 id="results-title">Results</h2>
-      <div aria-live="polite">Raw coverage: <span id="rawPct">0%</span></div>
+      <div aria-live="polite">Overall Skills Covered: <span id="rawPct">0%</span></div>
       <div aria-live="polite">Weighted coverage: <span id="wPct">0%</span></div>
       <canvas id="chart" height="180" role="img" aria-label="Coverage donut chart showing covered vs uncovered skill weight"></canvas>
+      <div id="chartLegend" class="legend" hidden>
+        <span class="legend-pill covered">Covered</span>
+        <span class="legend-pill uncovered">Uncovered</span>
+      </div>
       <div id="missingList" aria-live="polite"></div>
       <p id="explain" class="muted" aria-live="polite"></p>
     </section>

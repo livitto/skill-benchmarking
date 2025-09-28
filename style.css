@@ -15,6 +15,7 @@ header h1 { margin:0; font-size:20px; }
 .swatch { width:24px; height:24px; border-radius:999px; border:2px solid #1f2937; cursor:pointer; background:transparent; padding:0; }
 .secondary { background:transparent; color:var(--text); border:1px solid var(--border); padding:8px 10px; border-radius:8px; cursor:pointer; }
 .secondary:hover { border-color:#334155; }
+.secondary:disabled { opacity:0.5; cursor:not-allowed; }
 
 main { padding:16px; display:grid; grid-template-columns:1fr 1fr; gap:16px; }
 .card { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:16px; box-shadow: 0 10px 20px rgba(0,0,0,0.15); display:flex; flex-direction:column; gap:12px; }
@@ -38,6 +39,11 @@ button.primary:active { transform:translateY(0); box-shadow:0 4px 10px rgba(34,1
 button:focus-visible, input:focus-visible { outline:2px solid #93c5fd; outline-offset:2px; }
 
 canvas { background:#0b1220; border-radius:12px; border:1px solid #263041; padding:12px; }
+
+.legend { display:flex; gap:8px; margin-top:8px; }
+.legend-pill { display:inline-flex; align-items:center; gap:6px; padding:6px 10px; border-radius:999px; border:1px solid #263041; font-size:12px; }
+.legend-pill.covered { background:#0f1f17; color:#22c55e; border-color:#134e2f; }
+.legend-pill.uncovered { background:#0f1420; color:#93a3b5; border-color:#2a3647; }
 
 @media (max-width: 900px) {
   main { grid-template-columns:1fr; }

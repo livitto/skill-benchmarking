@@ -27,6 +27,7 @@ const explainEl = document.getElementById("explain");
 const chartCanvas = document.getElementById("chart");
 const swatches = document.querySelectorAll('.swatch');
 const printBtn = document.getElementById('printPage');
+if (printBtn) printBtn.disabled = true;
 const colorTrigger = document.getElementById('colorTrigger');
 const colorMenu = document.getElementById('colorMenu');
 
@@ -113,6 +114,10 @@ function compute(){
   chart.data.datasets[0].data = [coveredWeight, uncoveredWeight];
   chart.update("none");
 
+  // Show legend chips for better visibility
+  const legend = document.getElementById('chartLegend');
+  if (legend && legend.hasAttribute('hidden')) legend.removeAttribute('hidden');
+
   const topMissing = skills
     .filter(s => !s.has)
     .sort((a, b) => b.weight - a.weight)[0];
@@ -152,3 +157,7 @@ document.addEventListener('click', (e)=>{
 
 // Print
 printBtn?.addEventListener('click', ()=>{ window.print(); });
+// Enable print after compute
+computeButton?.addEventListener('click', ()=>{
+  if (printBtn) printBtn.disabled = false;
+});
