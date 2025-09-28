@@ -28,8 +28,8 @@ const chartCanvas = document.getElementById("chart");
 
 let chart = new Chart(chartCanvas, {
   type: "doughnut",
-  data: { labels: ["Covered", "Uncovered"], datasets: [{ data: [0, totalWeight] }] },
-  options: { animation: false, plugins: { legend: { labels: { color: "#e5e7eb" } } } }
+  data: { labels: ["Covered", "Uncovered"], datasets: [{ data: [0, totalWeight], backgroundColor:["#22c55e","#334155"], borderColor:["#16a34a","#1f2937"], borderWidth:1 }] },
+  options: { cutout: '60%', animation: false, plugins: { legend: { labels: { color: "#e5e7eb" } } } }
 });
 
 function renderSkills(){
