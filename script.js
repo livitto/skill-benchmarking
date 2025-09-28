@@ -36,7 +36,7 @@ function renderSkills(){
   let html = "";
   skills.forEach((s, idx) => {
     const id = `skill_${idx}`;
-    html += `<label for="${id}"><input id="${id}" name="skills" type="checkbox" data-idx="${idx}"/> ${s.name.replaceAll('_',' ')}</label>`;
+    html += `<label for="${id}" class="${s.has ? 'selected' : ''}"><input id="${id}" name="skills" type="checkbox" data-idx="${idx}" ${s.has ? 'checked' : ''}/> ${s.name.replaceAll('_',' ')}</label>`;
   });
   skillsContainer.innerHTML = html;
 }
@@ -47,7 +47,25 @@ skillsContainer.addEventListener("change", (event) => {
     const idx = Number(target.dataset.idx);
     if (!Number.isNaN(idx)) {
       skills[idx].has = target.checked;
+      const label = target.closest('label');
+      if (label) {
+        if (target.checked) label.classList.add('selected');
+        else label.classList.remove('selected');
+      }
     }
+  }
+});
+
+skillsContainer.addEventListener("click", (event) => {
+  const label = event.target.closest('label');
+  if (!label) return;
+  const input = label.querySelector('input[type="checkbox"]');
+  if (!input) return;
+  input.checked = !input.checked;
+  const idx = Number(input.dataset.idx);
+  if (!Number.isNaN(idx)) {
+    skills[idx].has = input.checked;
+    label.classList.toggle('selected', input.checked);
   }
 });
 
