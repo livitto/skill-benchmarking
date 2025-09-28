@@ -23,6 +23,7 @@ const computeButton = document.getElementById("compute");
 const rawPctEl = document.getElementById("rawPct");
 const weightedPctEl = document.getElementById("wPct");
 const missingListEl = document.getElementById("missingList");
+const explainEl = document.getElementById("explain");
 const chartCanvas = document.getElementById("chart");
 
 let chart = new Chart(chartCanvas, {
@@ -75,6 +76,8 @@ function compute(){
     .sort((a, b) => b.weight - a.weight)
     .slice(0, 5);
   missingListEl.innerText = "Top missing: " + miss.map(m => m.name.replaceAll('_',' ')).join(", ");
+
+  explainEl.innerText = `Raw coverage counts how many skills are selected (${selectedCount} of ${totalSkills}). Weighted coverage sums the importance of selected skills (${coveredWeight.toFixed(2)} of ${totalWeight.toFixed(2)} total weight).`;
 }
 
 computeButton.onclick = compute;
