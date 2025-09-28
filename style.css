@@ -11,6 +11,7 @@ header h1 { margin:0; font-size:20px; }
 .color-picker { position:relative; }
 .color-trigger { width:28px; height:28px; border-radius:999px; border:2px solid #1f2937; cursor:pointer; background:conic-gradient(#22c55e,#3b82f6,#a855f7,#f97316,#ec4899,#14b8a6,#22c55e); padding:0; }
 .color-menu { position:absolute; right:0; top:36px; display:grid; grid-template-columns:repeat(3, 28px); gap:8px; background:#0b1220; border:1px solid #263041; padding:10px; border-radius:10px; box-shadow:0 10px 20px rgba(0,0,0,0.3); }
+[hidden] { display:none !important; }
 .swatch { width:24px; height:24px; border-radius:999px; border:2px solid #1f2937; cursor:pointer; background:transparent; padding:0; }
 .secondary { background:transparent; color:var(--text); border:1px solid var(--border); padding:8px 10px; border-radius:8px; cursor:pointer; }
 .secondary:hover { border-color:#334155; }
