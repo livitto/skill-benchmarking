@@ -134,22 +134,54 @@ downloadBtn?.addEventListener('click', async ()=>{
   const { jsPDF } = window.jspdf || {};
   const main = document.getElementById('main');
   if (!main || !window.html2canvas || !jsPDF) return;
-  const canvas = await window.html2canvas(main, { backgroundColor: '#0f172a', scale: 2 });
-  // Try JPEG first with quality ladder to stay < 1MB
-  let quality = 0.8; // start
-  let imgData = canvas.toDataURL('image/jpeg', quality);
-  const targetBytes = 950 * 1024; // 0.95MB
-  while (imgData.length > targetBytes && quality > 0.4) {
+  const canvas = await window.html2canvas(main, { backgroundColor: '#0f172a', scale: 1 });
+  // Downscale if needed to bound pixel dimensions (helps file size)
+  const MAX_SIDE = 1600; // px
+  let workCanvas = canvas;
+  if (Math.max(canvas.width, canvas.height) > MAX_SIDE) {
+    const scale = MAX_SIDE / Math.max(canvas.width, canvas.height);
+    const tmp = document.createElement('canvas');
+    tmp.width = Math.floor(canvas.width * scale);
+    tmp.height = Math.floor(canvas.height * scale);
+    const ctx = tmp.getContext('2d');
+    ctx.imageSmoothingQuality = 'high';
+    ctx.drawImage(canvas, 0, 0, tmp.width, tmp.height);
+    workCanvas = tmp;
+  }
+  // JPEG quality ladder targeting < 0.95 MB
+  const targetBytes = 950 * 1024;
+  const dataUrlBytes = (d) => {
+    const b64 = d.split(',')[1] || '';
+    return atob(b64).length;
+  };
+  let quality = 0.75;
+  let imgData = workCanvas.toDataURL('image/jpeg', quality);
+  let guard = 0;
+  while (dataUrlBytes(imgData) > targetBytes && quality > 0.2 && guard < 10) {
     quality -= 0.1;
-    imgData = canvas.toDataURL('image/jpeg', quality);
+    imgData = workCanvas.toDataURL('image/jpeg', quality);
+    guard++;
+  }
+  // If still too big, downscale further by 90% and retry at last quality
+  guard = 0;
+  while (dataUrlBytes(imgData) > targetBytes && guard < 3) {
+    const tmp = document.createElement('canvas');
+    tmp.width = Math.floor(workCanvas.width * 0.9);
+    tmp.height = Math.floor(workCanvas.height * 0.9);
+    const ctx = tmp.getContext('2d');
+    ctx.imageSmoothingQuality = 'high';
+    ctx.drawImage(workCanvas, 0, 0, tmp.width, tmp.height);
+    workCanvas = tmp;
+    imgData = workCanvas.toDataURL('image/jpeg', quality);
+    guard++;
   }
 
-  const pdf = new jsPDF({ orientation: 'landscape', unit: 'pt', format: 'a4' });
+  const pdf = new jsPDF({ orientation: 'landscape', unit: 'pt', format: 'a4', compress: true });
   const pageWidth = pdf.internal.pageSize.getWidth();
   const pageHeight = pdf.internal.pageSize.getHeight();
-  const ratio = Math.min(pageWidth / canvas.width, pageHeight / canvas.height);
-  const imgWidth = canvas.width * ratio;
-  const imgHeight = canvas.height * ratio;
+  const ratio = Math.min(pageWidth / workCanvas.width, pageHeight / workCanvas.height);
+  const imgWidth = workCanvas.width * ratio;
+  const imgHeight = workCanvas.height * ratio;
   const x = (pageWidth - imgWidth) / 2;
   const y = 36;
   pdf.addImage(imgData, 'JPEG', x, y, imgWidth, imgHeight);
