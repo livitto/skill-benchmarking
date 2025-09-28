@@ -36,7 +36,7 @@ function renderSkills(){
   let html = "";
   skills.forEach((s, idx) => {
     const id = `skill_${idx}`;
-    html += `<label for="${id}"><input id="${id}" name="skills" type="checkbox" data-idx="${idx}"/> ${s.name.replaceAll('_',' ')} (${s.weight})</label>`;
+    html += `<label for="${id}"><input id="${id}" name="skills" type="checkbox" data-idx="${idx}"/> ${s.name.replaceAll('_',' ')}</label>`;
   });
   skillsContainer.innerHTML = html;
 }
@@ -71,11 +71,12 @@ function compute(){
   chart.data.datasets[0].data = [coveredWeight, uncoveredWeight];
   chart.update("none");
 
-  const miss = skills
+  const topMissing = skills
     .filter(s => !s.has)
-    .sort((a, b) => b.weight - a.weight)
-    .slice(0, 5);
-  missingListEl.innerText = "Top missing: " + miss.map(m => m.name.replaceAll('_',' ')).join(", ");
+    .sort((a, b) => b.weight - a.weight)[0];
+  missingListEl.innerText = topMissing
+    ? "Top missing skill: " + topMissing.name.replaceAll('_',' ')
+    : "All skills covered";
 
   explainEl.innerText = `Raw coverage counts how many skills are selected (${selectedCount} of ${totalSkills}). Weighted coverage sums the importance of selected skills (${coveredWeight.toFixed(2)} of ${totalWeight.toFixed(2)} total weight).`;
 }
