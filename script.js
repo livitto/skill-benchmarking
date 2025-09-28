@@ -25,6 +25,28 @@ const weightedPctEl = document.getElementById("wPct");
 const missingListEl = document.getElementById("missingList");
 const explainEl = document.getElementById("explain");
 const chartCanvas = document.getElementById("chart");
+const swatches = document.querySelectorAll('.swatch');
+const downloadBtn = document.getElementById('downloadPdf');
+
+function setAccent(color){
+  document.documentElement.style.setProperty('--accent', color);
+  if (chart) {
+    chart.data.datasets[0].backgroundColor = [color, "#334155"];
+    chart.data.datasets[0].borderColor = [shadeColor(color, -12), "#1f2937"];
+    chart.update("none");
+  }
+  localStorage.setItem('accentColor', color);
+  swatches.forEach(s=> s.classList.toggle('active', s.dataset.color===color));
+}
+
+function shadeColor(hex, percent){
+  const num=parseInt(hex.replace('#',''),16);
+  let r=(num>>16)&255, g=(num>>8)&255, b=num&255;
+  r=Math.max(0,Math.min(255,Math.floor(r*(100+percent)/100)));
+  g=Math.max(0,Math.min(255,Math.floor(g*(100+percent)/100)));
+  b=Math.max(0,Math.min(255,Math.floor(b*(100+percent)/100)));
+  return '#' + (1<<24 | (r<<16) | (g<<8) | b).toString(16).slice(1);
+}
 
 let chart = new Chart(chartCanvas, {
   type: "doughnut",
@@ -101,3 +123,27 @@ function compute(){
 
 computeButton.onclick = compute;
 renderSkills();
+
+// Accent init
+const savedAccent = localStorage.getItem('accentColor');
+if (savedAccent) setAccent(savedAccent);
+swatches.forEach(s=> s.addEventListener('click', ()=> setAccent(s.dataset.color)));
+
+// PDF download
+downloadBtn?.addEventListener('click', async ()=>{
+  const { jsPDF } = window.jspdf || {};
+  const main = document.getElementById('main');
+  if (!main || !window.html2canvas || !jsPDF) return;
+  const canvas = await window.html2canvas(main, { backgroundColor: '#0f172a', scale: 2 });
+  const imgData = canvas.toDataURL('image/png');
+  const pdf = new jsPDF({ orientation: 'portrait', unit: 'pt', format: 'a4' });
+  const pageWidth = pdf.internal.pageSize.getWidth();
+  const pageHeight = pdf.internal.pageSize.getHeight();
+  const ratio = Math.min(pageWidth / canvas.width, pageHeight / canvas.height);
+  const imgWidth = canvas.width * ratio;
+  const imgHeight = canvas.height * ratio;
+  const x = (pageWidth - imgWidth) / 2;
+  const y = 24;
+  pdf.addImage(imgData, 'PNG', x, y, imgWidth, imgHeight);
+  pdf.save('skill_coverage_report.pdf');
+});

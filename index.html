@@ -10,8 +10,21 @@
   <a class="skip-link" href="#main">Skip to content</a>
   <div class="container">
   <header role="banner">
-    <h1>Skill Coverage Prototype</h1>
-    <span class="pill">Bayesian-style weighting</span>
+    <div class="brand">
+      <h1>Skill Coverage Prototype</h1>
+      <span class="pill">Bayesian-style weighting</span>
+    </div>
+    <div class="controls">
+      <div class="swatches" role="group" aria-label="Choose accent color">
+        <button class="swatch active" data-color="#22c55e" style="background:#22c55e" aria-label="Green"></button>
+        <button class="swatch" data-color="#3b82f6" style="background:#3b82f6" aria-label="Blue"></button>
+        <button class="swatch" data-color="#a855f7" style="background:#a855f7" aria-label="Purple"></button>
+        <button class="swatch" data-color="#f97316" style="background:#f97316" aria-label="Orange"></button>
+        <button class="swatch" data-color="#ec4899" style="background:#ec4899" aria-label="Pink"></button>
+        <button class="swatch" data-color="#14b8a6" style="background:#14b8a6" aria-label="Teal"></button>
+      </div>
+      <button id="downloadPdf" class="secondary" type="button" aria-label="Download results as PDF">Download PDF</button>
+    </div>
   </header>
 
   <main id="main" role="main">
@@ -39,6 +52,8 @@
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js" crossorigin="anonymous" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js" crossorigin="anonymous" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js" crossorigin="anonymous" defer></script>
   <script src="./script.js?v=20250928a" defer></script>
 </body>
 </html>
