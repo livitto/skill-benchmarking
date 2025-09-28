@@ -34,7 +34,8 @@ let chart = new Chart(chartCanvas, {
 function renderSkills(){
   let html = "";
   skills.forEach((s, idx) => {
-    html += `<label><input type="checkbox" data-idx="${idx}"/> ${s.name} (${s.weight})</label>`;
+    const id = `skill_${idx}`;
+    html += `<label for="${id}"><input id="${id}" name="skills" type="checkbox" data-idx="${idx}"/> ${s.name.replaceAll('_',' ')} (${s.weight})</label>`;
   });
   skillsContainer.innerHTML = html;
 }
@@ -73,7 +74,7 @@ function compute(){
     .filter(s => !s.has)
     .sort((a, b) => b.weight - a.weight)
     .slice(0, 5);
-  missingListEl.innerText = "Top missing: " + miss.map(m => m.name).join(", ");
+  missingListEl.innerText = "Top missing: " + miss.map(m => m.name.replaceAll('_',' ')).join(", ");
 }
 
 computeButton.onclick = compute;

@@ -9,10 +9,18 @@ main { padding:20px; display:grid; grid-template-columns:1fr 1fr; gap:20px; }
 .card { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:16px; }
 .muted { color:var(--muted); }
 
+.skip-link { position:absolute; left:-9999px; top:auto; width:1px; height:1px; overflow:hidden; }
+.skip-link:focus { position:static; width:auto; height:auto; padding:8px 12px; background:#fff; color:#000; border-radius:8px; }
+
 .skill-list { border:1px dashed #263041; border-radius:10px; padding:8px; max-height:360px; overflow:auto; }
-.skill-list label { display:block; padding:6px 4px; border-radius:8px; }
-.skill-list label:hover { background:#0b1220; }
+#skills label { display:block; padding:6px 4px; border-radius:8px; }
+ #skills label:hover { background:#0b1220; }
 
 button { margin-top:10px; background:var(--accent); color:#031a0d; border:none; padding:10px 12px; border-radius:8px; cursor:pointer; }
+button:focus-visible, input:focus-visible { outline:2px solid #93c5fd; outline-offset:2px; }
 
 canvas { background:#0b1220; border-radius:12px; border:1px solid #263041; padding:12px; }
+
+@media (max-width: 900px) {
+  main { grid-template-columns:1fr; }
+}
