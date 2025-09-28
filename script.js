@@ -27,6 +27,8 @@ const explainEl = document.getElementById("explain");
 const chartCanvas = document.getElementById("chart");
 const swatches = document.querySelectorAll('.swatch');
 const downloadBtn = document.getElementById('downloadPdf');
+const colorTrigger = document.getElementById('colorTrigger');
+const colorMenu = document.getElementById('colorMenu');
 
 function setAccent(color){
   document.documentElement.style.setProperty('--accent', color);
@@ -128,6 +130,25 @@ renderSkills();
 const savedAccent = localStorage.getItem('accentColor');
 if (savedAccent) setAccent(savedAccent);
 swatches.forEach(s=> s.addEventListener('click', ()=> setAccent(s.dataset.color)));
+// Toggle color menu
+colorTrigger?.addEventListener('click', ()=>{
+  const isOpen = !colorMenu.hasAttribute('hidden');
+  if (isOpen) {
+    colorMenu.setAttribute('hidden','');
+    colorTrigger.setAttribute('aria-expanded','false');
+  } else {
+    colorMenu.removeAttribute('hidden');
+    colorTrigger.setAttribute('aria-expanded','true');
+  }
+});
+document.addEventListener('click', (e)=>{
+  if (!colorMenu || !colorTrigger) return;
+  if (colorMenu.contains(e.target) || colorTrigger.contains(e.target)) return;
+  if (!colorMenu.hasAttribute('hidden')){
+    colorMenu.setAttribute('hidden','');
+    colorTrigger.setAttribute('aria-expanded','false');
+  }
+});
 
 // PDF download
 downloadBtn?.addEventListener('click', async ()=>{
