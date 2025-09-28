@@ -1,10 +1,18 @@
-cat > script.js <<'EOF'
+// Default demo dataset
 let skills = [
-  {name:"figma", weight:0.1, has:false},
+  {name:"figma", weight:0.10, has:false},
+  {name:"wireframing", weight:0.06, has:false},
+  {name:"prototyping", weight:0.08, has:false},
   {name:"usability_testing", weight:0.08, has:false},
-  {name:"python", weight:0.05, has:false},
+  {name:"heuristic_evaluation", weight:0.05, has:false},
+  {name:"user_interviews", weight:0.07, has:false},
   {name:"accessibility", weight:0.06, has:false},
-  {name:"sql", weight:0.04, has:false}
+  {name:"html_css", weight:0.05, has:false},
+  {name:"javascript", weight:0.04, has:false},
+  {name:"python", weight:0.04, has:false},
+  {name:"sql", weight:0.03, has:false},
+  {name:"ab_testing", weight:0.04, has:false},
+  {name:"data_visualization", weight:0.03, has:false}
 ];
 
 const sum = arr => arr.reduce((a,b)=>a+b,0);
@@ -19,27 +27,35 @@ function renderSkills(){
     list.appendChild(div);
   });
 }
+
 function compute(){
   const checks=document.querySelectorAll("#skills input");
   checks.forEach(c=> skills[c.dataset.idx].has=c.checked);
+
   const sel=skills.filter(s=>s.has);
   const raw=sel.length/skills.length;
   const weighted=sum(sel.map(s=>s.weight))/sum(skills.map(s=>s.weight));
+
   document.getElementById("rawPct").innerText=(raw*100).toFixed(1)+"%";
   document.getElementById("wPct").innerText=(weighted*100).toFixed(1)+"%";
+
   const covered=sum(sel.map(s=>s.weight));
   const uncovered=sum(skills.map(s=>s.weight))-covered;
+
   if(!chart){
-    chart=new Chart(document.getElementById("chart"),{type:"doughnut",
+    chart=new Chart(document.getElementById("chart"),{
+      type:"doughnut",
       data:{labels:["Covered","Uncovered"],datasets:[{data:[covered,uncovered]}]},
-      options:{plugins:{legend:{labels:{color:"#e5e7eb"}}}}});
+      options:{plugins:{legend:{labels:{color:"#e5e7eb"}}}}
+    });
   } else {
     chart.data.datasets[0].data=[covered,uncovered];
     chart.update();
   }
+
   const miss=skills.filter(s=>!s.has).sort((a,b)=>b.weight-a.weight).slice(0,5);
   document.getElementById("missingList").innerText="Top missing: "+miss.map(m=>m.name).join(", ");
 }
+
 document.getElementById("compute").onclick=compute;
 renderSkills();
-EOF
