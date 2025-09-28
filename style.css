@@ -1,0 +1,12 @@
+cat > style.css <<'EOF'
+:root { --bg:#0f172a; --card:#111827; --text:#e5e7eb; --muted:#9ca3af; --accent:#22c55e; }
+body { margin:0; font-family: system-ui, sans-serif; background: var(--bg); color: var(--text); }
+header { padding:20px; border-bottom:1px solid #1f2937; }
+header h1 { margin:0; font-size:20px; }
+.pill { background:#1f2937; padding:6px 10px; border-radius:999px; color:var(--muted); font-size:12px;}
+main { padding:20px; display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+.card { background: var(--card); border:1px solid #1f2937; border-radius:12px; padding:16px; }
+.skill-list { border:1px dashed #263041; border-radius:10px; padding:8px; }
+button { background: var(--accent); color:#031a0d; border:none; padding:10px 12px; border-radius:8px; cursor:pointer; }
+canvas { background:#0b1220; border-radius:12px; border:1px solid #263041; padding:12px; }
+EOF

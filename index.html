@@ -1,0 +1,36 @@
+cat > index.html <<'EOF'
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Skill Coverage (Bayesian-style weighting)</title>
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <header>
+    <h1>Skill Coverage Prototype</h1>
+    <span class="pill">Bayesian-style weighting</span>
+  </header>
+
+  <main>
+    <section class="card">
+      <h2>Student Skills</h2>
+      <div id="skills" class="skill-list"></div>
+      <button id="compute" class="primary">Compute Coverage</button>
+    </section>
+
+    <section class="card">
+      <h2>Results</h2>
+      <div>Raw coverage: <span id="rawPct">0%</span></div>
+      <div>Weighted coverage: <span id="wPct">0%</span></div>
+      <canvas id="chart" height="180"></canvas>
+      <div id="missingList"></div>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="./script.js"></script>
+</body>
+</html>
+EOF
