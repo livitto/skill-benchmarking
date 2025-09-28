@@ -1,0 +1,17 @@
+# OS / Editor
+.DS_Store
+Thumbs.db
+*.swp
+*.log
+
+# Node / frontend build tooling
+node_modules/
+dist/
+build/
+.cache/
+
+# Local settings
+.env
+.vscode/
+.idea/
+.history/
