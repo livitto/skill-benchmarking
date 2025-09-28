@@ -15,47 +15,66 @@ let skills = [
   {name:"data_visualization", weight:0.03, has:false}
 ];
 
-const sum = arr => arr.reduce((a,b)=>a+b,0);
-let chart;
+const totalWeight = skills.reduce((acc, s) => acc + s.weight, 0);
+const totalSkills = skills.length;
+
+const skillsContainer = document.getElementById("skills");
+const computeButton = document.getElementById("compute");
+const rawPctEl = document.getElementById("rawPct");
+const weightedPctEl = document.getElementById("wPct");
+const missingListEl = document.getElementById("missingList");
+const chartCanvas = document.getElementById("chart");
+
+let chart = new Chart(chartCanvas, {
+  type: "doughnut",
+  data: { labels: ["Covered", "Uncovered"], datasets: [{ data: [0, totalWeight] }] },
+  options: { animation: false, plugins: { legend: { labels: { color: "#e5e7eb" } } } }
+});
 
 function renderSkills(){
-  const list=document.getElementById("skills");
-  list.innerHTML="";
-  skills.forEach((s,idx)=>{
-    const div=document.createElement("div");
-    div.innerHTML=`<label><input type="checkbox" data-idx="${idx}"/> ${s.name} (${s.weight})</label>`;
-    list.appendChild(div);
+  let html = "";
+  skills.forEach((s, idx) => {
+    html += `<label><input type="checkbox" data-idx="${idx}"/> ${s.name} (${s.weight})</label>`;
   });
+  skillsContainer.innerHTML = html;
 }
+
+skillsContainer.addEventListener("change", (event) => {
+  const target = event.target;
+  if (target && target.matches('input[type="checkbox"]')) {
+    const idx = Number(target.dataset.idx);
+    if (!Number.isNaN(idx)) {
+      skills[idx].has = target.checked;
+    }
+  }
+});
 
 function compute(){
-  const checks=document.querySelectorAll("#skills input");
-  checks.forEach(c=> skills[c.dataset.idx].has=c.checked);
-
-  const sel=skills.filter(s=>s.has);
-  const raw=sel.length/skills.length;
-  const weighted=sum(sel.map(s=>s.weight))/sum(skills.map(s=>s.weight));
-
-  document.getElementById("rawPct").innerText=(raw*100).toFixed(1)+"%";
-  document.getElementById("wPct").innerText=(weighted*100).toFixed(1)+"%";
-
-  const covered=sum(sel.map(s=>s.weight));
-  const uncovered=sum(skills.map(s=>s.weight))-covered;
-
-  if(!chart){
-    chart=new Chart(document.getElementById("chart"),{
-      type:"doughnut",
-      data:{labels:["Covered","Uncovered"],datasets:[{data:[covered,uncovered]}]},
-      options:{plugins:{legend:{labels:{color:"#e5e7eb"}}}}
-    });
-  } else {
-    chart.data.datasets[0].data=[covered,uncovered];
-    chart.update();
+  let selectedCount = 0;
+  let coveredWeight = 0;
+  for (const s of skills) {
+    if (s.has) {
+      selectedCount++;
+      coveredWeight += s.weight;
+    }
   }
 
-  const miss=skills.filter(s=>!s.has).sort((a,b)=>b.weight-a.weight).slice(0,5);
-  document.getElementById("missingList").innerText="Top missing: "+miss.map(m=>m.name).join(", ");
+  const raw = selectedCount / totalSkills;
+  const weighted = coveredWeight / totalWeight;
+
+  rawPctEl.innerText = (raw * 100).toFixed(1) + "%";
+  weightedPctEl.innerText = (weighted * 100).toFixed(1) + "%";
+
+  const uncoveredWeight = totalWeight - coveredWeight;
+  chart.data.datasets[0].data = [coveredWeight, uncoveredWeight];
+  chart.update("none");
+
+  const miss = skills
+    .filter(s => !s.has)
+    .sort((a, b) => b.weight - a.weight)
+    .slice(0, 5);
+  missingListEl.innerText = "Top missing: " + miss.map(m => m.name).join(", ");
 }
 
-document.getElementById("compute").onclick=compute;
+computeButton.onclick = compute;
 renderSkills();
