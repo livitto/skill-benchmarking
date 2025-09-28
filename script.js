@@ -135,15 +135,28 @@ downloadBtn?.addEventListener('click', async ()=>{
   const main = document.getElementById('main');
   if (!main || !window.html2canvas || !jsPDF) return;
   const canvas = await window.html2canvas(main, { backgroundColor: '#0f172a', scale: 2 });
-  const imgData = canvas.toDataURL('image/png');
-  const pdf = new jsPDF({ orientation: 'portrait', unit: 'pt', format: 'a4' });
+  // Try JPEG first with quality ladder to stay < 1MB
+  let quality = 0.8; // start
+  let imgData = canvas.toDataURL('image/jpeg', quality);
+  const targetBytes = 950 * 1024; // 0.95MB
+  while (imgData.length > targetBytes && quality > 0.4) {
+    quality -= 0.1;
+    imgData = canvas.toDataURL('image/jpeg', quality);
+  }
+
+  const pdf = new jsPDF({ orientation: 'landscape', unit: 'pt', format: 'a4' });
   const pageWidth = pdf.internal.pageSize.getWidth();
   const pageHeight = pdf.internal.pageSize.getHeight();
   const ratio = Math.min(pageWidth / canvas.width, pageHeight / canvas.height);
   const imgWidth = canvas.width * ratio;
   const imgHeight = canvas.height * ratio;
   const x = (pageWidth - imgWidth) / 2;
-  const y = 24;
-  pdf.addImage(imgData, 'PNG', x, y, imgWidth, imgHeight);
+  const y = 36;
+  pdf.addImage(imgData, 'JPEG', x, y, imgWidth, imgHeight);
+  // Add timestamp footer
+  const ts = new Date().toLocaleString();
+  pdf.setFontSize(10);
+  pdf.setTextColor('#6b7280');
+  pdf.text(`Generated: ${ts}`, pageWidth - 24, pageHeight - 16, { align: 'right' });
   pdf.save('skill_coverage_report.pdf');
 });
